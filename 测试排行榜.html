@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排行榜测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>在线排行榜功能测试</h1>
+    
+    <div class="test-section">
+        <h2>测试说明</h2>
+        <p>此页面用于测试排行榜是否真正实现了在线共享功能。</p>
+        <p>如果功能正常，多个用户应该能看到相同的排行榜数据。</p>
+    </div>
+
+    <div class="test-section">
+        <h2>操作</h2>
+        <button onclick="loadOnlineData()">1. 从在线加载数据</button>
+        <button onclick="addTestScore()">2. 添加测试分数</button>
+        <button onclick="clearLocal()">3. 清除本地缓存（验证在线功能）</button>
+    </div>
+
+    <div class="test-section">
+        <h2>测试结果</h2>
+        <div id="result">等待测试...</div>
+    </div>
+
+    <script>
+        const API_URL = 'https://api.jsonbin.io/v3/b/6734a1e5ad19ca34f8c4f2a1';
+        const API_KEY = '$2a$10$VqHKj0LhX8wV6jY5oB9zLOxK9kZ.hP5qF9P.xL3nL9mY6zP8zF9nK';
+
+        function log(message, type = 'info') {
+            const result = document.getElementById('result');
+            const className = type === 'error' ? 'error' : (type === 'success' ? 'success' : '');
+            result.innerHTML += `<div class="${className}">${new Date().toLocaleTimeString()} - ${message}</div>`;
+        }
+
+        async function loadOnlineData() {
+            log('正在从在线数据库加载...', 'info');
+            try {
+                const response = await fetch(API_URL + '/latest', {
+                    headers: {
+                        'X-Master-Key': API_KEY
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log('✓ 在线数据加载成功！', 'success');
+                    log('当前排行榜数据：\n' + JSON.stringify(data.record, null, 2), 'success');
+                    
+                    if (data.record && data.record.scores) {
+                        log(`共有 ${data.record.scores.length} 条记录`, 'success');
+                    }
+                } else {
+                    log('✗ 加载失败: HTTP ' + response.status, 'error');
+                }
+            } catch (e) {
+                log('✗ 加载失败: ' + e.message, 'error');
+            }
+        }
+
+        async function addTestScore() {
+            log('正在添加测试分数...', 'info');
+            try {
+                // 先加载当前数据
+                const loadResponse = await fetch(API_URL + '/latest', {
+                    headers: {
+                        'X-Master-Key': API_KEY
+                    }
+                });
+                
+                let scores = [];
+                if (loadResponse.ok) {
+                    const data = await loadResponse.json();
+                    scores = data.record.scores || [];
+                }
+
+                // 添加测试数据
+                const testScore = {
+                    name: '测试用户' + Math.floor(Math.random() * 1000),
+                    score: Math.floor(Math.random() * 100),
+                    date: new Date().toLocaleDateString('zh-CN')
+                };
+                
+                scores.push(testScore);
+                scores.sort((a, b) => b.score - a.score);
+                scores = scores.slice(0, 10);
+
+                // 保存到在线
+                const saveResponse = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify({ scores: scores })
+                });
+                
+                if (saveResponse.ok) {
+                    log('✓ 测试分数保存成功！', 'success');
+                    log('新增记录: ' + JSON.stringify(testScore, null, 2), 'success');
+                    setTimeout(() => loadOnlineData(), 1000);
+                } else {
+                    log('✗ 保存失败: HTTP ' + saveResponse.status, 'error');
+                }
+            } catch (e) {
+                log('✗ 保存失败: ' + e.message, 'error');
+            }
+        }
+
+        function clearLocal() {
+            localStorage.removeItem('snakeGameLeaderboard');
+            log('✓ 本地缓存已清除', 'success');
+            log('现在刷新游戏页面，如果还能看到排行榜，说明在线功能正常工作', 'info');
+        }
+
+        // 页面加载时自动测试
+        window.addEventListener('DOMContentLoaded', () => {
+            log('=== 开始自动测试 ===', 'info');
+            loadOnlineData();
+        });
+    </script>
+</body>
+</html>
