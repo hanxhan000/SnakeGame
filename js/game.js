@@ -106,6 +106,70 @@ class Game {
                 this.saveScore();
             }
         });
+
+        // 移动端触控支持
+        this.addTouchControls();
+    }
+
+    // 添加移动端触控控制
+    addTouchControls() {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        const minSwipeDistance = 30; // 最小滑动距离
+
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+        }, { passive: false });
+
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+        this.canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            const touch = e.changedTouches[0];
+            touchEndX = touch.clientX;
+            touchEndY = touch.clientY;
+
+            this.handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY, minSwipeDistance);
+        }, { passive: false });
+    }
+
+    // 处理滑动手势
+    handleSwipe(startX, startY, endX, endY, minDistance) {
+        if (!this.isRunning || this.isPaused) return;
+
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+
+        // 判断滑动方向
+        if (Math.max(absDeltaX, absDeltaY) < minDistance) {
+            return; // 滑动距离太短，忽略
+        }
+
+        if (absDeltaX > absDeltaY) {
+            // 水平滑动
+            if (deltaX > 0) {
+                this.snake.changeDirection({ x: 1, y: 0 }); // 右
+            } else {
+                this.snake.changeDirection({ x: -1, y: 0 }); // 左
+            }
+        } else {
+            // 垂直滑动
+            if (deltaY > 0) {
+                this.snake.changeDirection({ x: 0, y: 1 }); // 下
+            } else {
+                this.snake.changeDirection({ x: 0, y: -1 }); // 上
+            }
+        }
     }
 
     // 处理键盘按键
@@ -277,29 +341,36 @@ class Game {
         // 显示游戏结束画面
         this.gameOverScreen.classList.remove('hidden');
         
+        // 自动填充上次的用户名
+        const nameInput = document.getElementById('player-name');
+        const lastName = this.leaderboard.getLastPlayerName();
+        if (lastName) {
+            nameInput.value = lastName;
+        }
+        
         // 如果是新纪录，自动聚焦输入框
         if (this.leaderboard.isTopScore(this.score) || this.score > 0) {
-            document.getElementById('player-name').focus();
+            nameInput.focus();
+            nameInput.select(); // 选中文本方便修改
         }
     }
 
     // 保存分数
-    saveScore() {
+    async saveScore() {
         const nameInput = document.getElementById('player-name');
         const name = nameInput.value.trim() || '匿名玩家';
         
-        this.leaderboard.addScore(name, this.score);
+        const saveBtn = document.getElementById('save-score-btn');
+        const originalText = saveBtn.textContent;
+        saveBtn.textContent = '保存中...';
+        saveBtn.disabled = true;
+        
+        await this.leaderboard.addScore(name, this.score);
         this.updateLeaderboard();
         this.updateHighScore();
         
-        // 清空输入框
-        nameInput.value = '';
-        
         // 提示保存成功
-        const saveBtn = document.getElementById('save-score-btn');
-        const originalText = saveBtn.textContent;
         saveBtn.textContent = '✓ 已保存';
-        saveBtn.disabled = true;
         
         setTimeout(() => {
             saveBtn.textContent = originalText;

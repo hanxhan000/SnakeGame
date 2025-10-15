@@ -1,35 +1,84 @@
-// 排行榜类
+// 排行榜类（在线版本）
 class Leaderboard {
     constructor() {
         this.scores = [];
         this.maxScores = 10; // 最多保存10条记录
+        this.apiUrl = 'https://api.jsonbin.io/v3/b/6734a1e5ad19ca34f8c4f2a1'; // JSONBin API
+        this.apiKey = '$2a$10$VqHKj0LhX8wV6jY5oB9zLOxK9kZ.hP5qF9P.xL3nL9mY6zP8zF9nK'; // API Key
         this.load();
     }
 
-    // 从LocalStorage加载数据
-    load() {
+    // 从在线数据库加载数据
+    async load() {
         try {
-            const data = localStorage.getItem('snakeGameLeaderboard');
-            if (data) {
-                this.scores = JSON.parse(data);
+            // 先尝试从本地缓存加载
+            const cachedData = localStorage.getItem('snakeGameLeaderboard');
+            if (cachedData) {
+                this.scores = JSON.parse(cachedData);
+            }
+
+            // 然后从在线加载
+            const response = await fetch(this.apiUrl + '/latest', {
+                headers: {
+                    'X-Master-Key': this.apiKey
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.record && data.record.scores) {
+                    this.scores = data.record.scores;
+                    // 更新本地缓存
+                    localStorage.setItem('snakeGameLeaderboard', JSON.stringify(this.scores));
+                }
             }
         } catch (e) {
-            console.error('加载排行榜失败:', e);
-            this.scores = [];
+            console.log('使用本地缓存数据');
         }
     }
 
-    // 保存到LocalStorage
-    save() {
+    // 保存到在线数据库
+    async save() {
         try {
+            // 保存到本地
             localStorage.setItem('snakeGameLeaderboard', JSON.stringify(this.scores));
+
+            // 保存到在线
+            const response = await fetch(this.apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': this.apiKey
+                },
+                body: JSON.stringify({
+                    scores: this.scores
+                })
+            });
+            
+            if (response.ok) {
+                console.log('排行榜保存成功！');
+                return true;
+            }
         } catch (e) {
             console.error('保存排行榜失败:', e);
+            // 即使在线保存失败，本地也已保存
+            return false;
         }
+    }
+
+    // 获取上次保存的用户名
+    getLastPlayerName() {
+        const lastName = localStorage.getItem('snakeGameLastPlayer');
+        return lastName || '';
+    }
+
+    // 保存用户名
+    savePlayerName(name) {
+        localStorage.setItem('snakeGameLastPlayer', name);
     }
 
     // 添加分数
-    addScore(name, score) {
+    async addScore(name, score) {
         if (!name || name.trim() === '') {
             name = '匿名玩家';
         }
@@ -48,7 +97,11 @@ class Leaderboard {
         // 只保留前10名
         this.scores = this.scores.slice(0, this.maxScores);
         
-        this.save();
+        // 保存用户名
+        this.savePlayerName(name.trim());
+        
+        // 保存到本地和在线
+        await this.save();
     }
 
     // 获取所有分数

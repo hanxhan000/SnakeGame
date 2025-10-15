@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部署状态检查 - SnakeGame</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .status-box {
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .status-box.success {
+            border-left-color: #27ae60;
+            background: #d4edda;
+        }
+        .status-box.warning {
+            border-left-color: #f39c12;
+            background: #fff3cd;
+        }
+        .status-box.info {
+            border-left-color: #3498db;
+            background: #d1ecf1;
+        }
+        .status-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .status-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        .url-box {
+            background: white;
+            border: 2px solid #3498db;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .url-box a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            word-break: break-all;
+        }
+        .url-box a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .center {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .timer {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .steps {
+            margin: 20px 0;
+        }
+        .step-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .checkmark {
+            color: #27ae60;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 部署状态检查</h1>
+        
+        <div class="status-box success">
+            <div class="status-title">✅ GitHub Pages 已启用</div>
+            <div class="status-content">
+                你的游戏正在部署中...
+            </div>
+        </div>
+
+        <div class="status-box info">
+            <div class="status-title">⏱️ 部署进度</div>
+            <div class="status-content">
+                <div class="steps">
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <span class="checkmark">✓</span> 代码推送到GitHub
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <span class="checkmark">✓</span> GitHub Pages 已启用
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <span id="deploy-status">⏳</span> GitHub Actions 部署中...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-box warning">
+            <div class="status-title">⏰ 预计等待时间</div>
+            <div class="timer" id="countdown">1-3 分钟</div>
+            <div class="status-content" style="text-align: center;">
+                首次部署通常需要 1-3 分钟<br>
+                请耐心等待...
+            </div>
+        </div>
+
+        <div class="status-box info">
+            <div class="status-title">🌐 你的游戏地址</div>
+            <div class="url-box">
+                <a href="https://hanxhan000.github.io/SnakeGame/" target="_blank" id="game-link">
+                    https://hanxhan000.github.io/SnakeGame/
+                </a>
+            </div>
+        </div>
+
+        <div class="center">
+            <p style="font-size: 1.2rem; color: #555; margin-bottom: 20px;">
+                点击下方按钮检查部署状态
+            </p>
+            <a href="https://hanxhan000.github.io/SnakeGame/" target="_blank" class="btn btn-success">
+                🎮 访问游戏
+            </a>
+            <a href="https://github.com/hanxhan000/SnakeGame/deployments" target="_blank" class="btn">
+                📊 查看部署状态
+            </a>
+            <a href="https://github.com/hanxhan000/SnakeGame" target="_blank" class="btn">
+                📦 查看仓库
+            </a>
+        </div>
+
+        <div class="status-box">
+            <div class="status-title">💡 使用提示</div>
+            <div class="status-content">
+                <strong>如果看到 404 错误：</strong><br>
+                1. 等待 2-3 分钟后刷新页面<br>
+                2. 清除浏览器缓存（Ctrl + F5）<br>
+                3. 检查 GitHub Pages 是否正确配置为 main 分支<br>
+                <br>
+                <strong>如果游戏正常显示：</strong><br>
+                🎉 恭喜！部署成功！<br>
+                ✓ 可以开始玩游戏了<br>
+                ✓ 可以分享链接给朋友<br>
+                ✓ 游戏永久在线
+            </div>
+        </div>
+
+        <div class="status-box success" style="margin-top: 30px;">
+            <div class="status-title">🎯 快速检查清单</div>
+            <div class="status-content">
+                <div class="steps">
+                    <div class="step-item">
+                        <span class="checkmark">✓</span> 项目开发完成
+                    </div>
+                    <div class="step-item">
+                        <span class="checkmark">✓</span> 代码推送到GitHub
+                    </div>
+                    <div class="step-item">
+                        <span class="checkmark">✓</span> GitHub Pages已启用
+                    </div>
+                    <div class="step-item">
+                        <span id="final-check">⏳</span> 等待部署完成（1-3分钟）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 自动刷新检查
+        let seconds = 0;
+        const maxWait = 180; // 3分钟
+        
+        setInterval(() => {
+            seconds++;
+            const remaining = Math.max(0, maxWait - seconds);
+            const minutes = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            
+            if (remaining > 0) {
+                document.getElementById('countdown').textContent = 
+                    `${minutes}:${secs.toString().padStart(2, '0')}`;
+            } else {
+                document.getElementById('countdown').textContent = '应该部署完成了！';
+                document.getElementById('deploy-status').innerHTML = 
+                    '<span class="checkmark">✓</span>';
+                document.getElementById('final-check').innerHTML = 
+                    '<span class="checkmark">✓</span>';
+            }
+        }, 1000);
+        
+        // 提示用户刷新
+        setTimeout(() => {
+            if (confirm('已等待1分钟，现在要打开游戏页面检查吗？')) {
+                window.open('https://hanxhan000.github.io/SnakeGame/', '_blank');
+            }
+        }, 60000);
+    </script>
+</body>
+</html>

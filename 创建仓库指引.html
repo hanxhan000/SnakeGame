@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建GitHub仓库 - 一步一步指引</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .step {
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        .step-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .step-content {
+            color: #555;
+            line-height: 1.8;
+            margin-left: 55px;
+        }
+        .input-box {
+            background: white;
+            border: 2px solid #3498db;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            color: #856404;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            color: #155724;
+        }
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .center {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .checkbox-item {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 创建GitHub仓库指引</h1>
+        
+        <div class="success">
+            <strong>✅ 准备工作已完成！</strong><br>
+            现在只需要在GitHub上创建仓库，然后我就能帮你自动推送代码了！
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                打开GitHub创建页面
+            </div>
+            <div class="step-content">
+                <p>点击下面的按钮，会在新标签页打开GitHub创建仓库页面：</p>
+                <div class="center">
+                    <a href="https://github.com/new" target="_blank" class="btn">
+                        📝 打开GitHub创建仓库页面
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                填写仓库名称
+            </div>
+            <div class="step-content">
+                <p>在 <strong>Repository name</strong> 框中填写：</p>
+                <div class="input-box">snake-game</div>
+                <div class="warning">
+                    ⚠️ <strong>必须完全一致！</strong>不能有空格、大小写错误或其他字符
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                填写描述（可选）
+            </div>
+            <div class="step-content">
+                <p>在 <strong>Description</strong> 框中填写（或留空）：</p>
+                <div class="input-box">HTML5 Snake Game with Leaderboard and Sound Effects</div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">4</span>
+                选择公开仓库
+            </div>
+            <div class="step-content">
+                <p>在可见性选项中，选择：</p>
+                <div class="checkbox-item">
+                    <input type="radio" checked disabled> 
+                    <strong class="highlight">Public</strong> （公开）
+                </div>
+                <div class="warning">
+                    ⚠️ <strong>必须选择Public！</strong>只有公开仓库才能免费使用GitHub Pages
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">5</span>
+                不要勾选初始化选项
+            </div>
+            <div class="step-content">
+                <p><strong>Initialize this repository with:</strong> 部分，<span class="highlight">全部不要勾选！</span></p>
+                <div class="checkbox-item">
+                    <input type="checkbox" disabled> Add a README file
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" disabled> Add .gitignore
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" disabled> Choose a license
+                </div>
+                <div class="warning">
+                    ⚠️ <strong>重要！</strong>如果勾选了任何选项，推送会失败！
+                </div>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-title">
+                <span class="step-number">6</span>
+                创建仓库
+            </div>
+            <div class="step-content">
+                <p>滚动到页面底部，点击绿色按钮：</p>
+                <div class="center">
+                    <button class="btn btn-success" disabled>
+                        ✨ Create repository
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="success">
+            <strong>✅ 创建成功的标志：</strong><br>
+            创建后会看到 "Quick setup" 页面，显示仓库地址：<br>
+            <code>https://github.com/hanxhan000/snake-game.git</code>
+        </div>
+
+        <div class="center" style="margin-top: 40px;">
+            <p style="font-size: 1.2rem; color: #2c3e50; margin-bottom: 20px;">
+                <strong>创建完成后，回来告诉我"创建好了"</strong>
+            </p>
+            <p style="color: #7f8c8d;">
+                我会立即帮你推送代码并完成部署！🚀
+            </p>
+        </div>
+    </div>
+</body>
+</html>
