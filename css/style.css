@@ -1,0 +1,379 @@
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* 头部样式 */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.score-board {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.score-item {
+    background: #f8f9fa;
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.score-item .label {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.score-item .value {
+    font-size: 1.8rem;
+    color: #e74c3c;
+    font-weight: 700;
+    margin-left: 10px;
+}
+
+/* 主游戏区域 */
+main {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.game-wrapper {
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#gameCanvas {
+    display: block;
+    background: #f5f5f5;
+    border: 3px solid #34495e;
+}
+
+/* 遮罩层样式 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay-content {
+    text-align: center;
+    color: #fff;
+    padding: 40px;
+}
+
+.overlay-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.overlay-content p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+.final-score {
+    font-size: 1.5rem !important;
+    color: #f39c12 !important;
+    font-weight: 700;
+    margin: 20px 0 !important;
+}
+
+.final-score span {
+    font-size: 2.5rem;
+    color: #e74c3c;
+}
+
+/* 名称输入 */
+.name-input-wrapper {
+    margin: 25px 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#player-name {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    min-width: 200px;
+    transition: all 0.3s ease;
+}
+
+#player-name:focus {
+    outline: none;
+    background: #fff;
+    border-color: #3498db;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+}
+
+.btn-success {
+    background: #2ecc71;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background: #27ae60;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+/* 排行榜样式 */
+.leaderboard {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    min-width: 300px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.leaderboard-list {
+    margin-bottom: 15px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.leaderboard-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-item.rank-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    font-weight: 700;
+}
+
+.leaderboard-item.rank-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+    font-weight: 600;
+}
+
+.leaderboard-item.rank-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #e8a87c 100%);
+    font-weight: 600;
+}
+
+.leaderboard-item .rank {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e74c3c;
+    min-width: 30px;
+}
+
+.leaderboard-item .name {
+    flex: 1;
+    font-size: 1rem;
+    color: #2c3e50;
+    padding: 0 15px;
+}
+
+.leaderboard-item .score {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #27ae60;
+}
+
+.leaderboard-item .date {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-left: 10px;
+}
+
+.empty-leaderboard {
+    text-align: center;
+    padding: 40px 20px;
+    color: #95a5a6;
+    font-size: 1rem;
+}
+
+/* 底部控制按钮 */
+footer {
+    margin-top: 30px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* 滚动条样式 */
+.leaderboard-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leaderboard-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.leaderboard-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .score-board {
+        gap: 20px;
+    }
+
+    main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #gameCanvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+    }
+
+    .leaderboard {
+        width: 100%;
+    }
+}
