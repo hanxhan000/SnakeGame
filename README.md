@@ -9,7 +9,7 @@
 
 ## 🎮 在线演示
 
-**在线游戏地址：** https://hanxhan000.github.io/snake-game/
+**在线游戏地址：** https://hanxhan000.github.io/SnakeGame/
 
 > 📝 部署说明：已成功部署到GitHub Pages，点击上方链接即可在线游戏！
 
