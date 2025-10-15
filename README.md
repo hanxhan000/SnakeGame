@@ -9,9 +9,9 @@
 
 ## 🎮 在线演示
 
-**部署后访问链接：** `https://YOUR_USERNAME.github.io/REPO_NAME/`
+**在线游戏地址：** https://hanxhan000.github.io/snake-game/
 
-> 📝 部署说明：请查看 [GitHub部署指南.md](GitHub部署指南.md) 了解如何将游戏部署到GitHub Pages
+> 📝 部署说明：已成功部署到GitHub Pages，点击上方链接即可在线游戏！
 
 ![游戏截图](https://via.placeholder.com/800x400/667eea/ffffff?text=Snake+Game+Screenshot)
 > 💡 提示：部署后可以替换为实际游戏截图
