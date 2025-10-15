@@ -79,15 +79,6 @@ class Game {
             this.saveScore();
         });
 
-        // 清空排行榜按钮
-        document.getElementById('clear-leaderboard-btn').addEventListener('click', () => {
-            if (confirm('确定要清空排行榜吗？')) {
-                this.leaderboard.clear();
-                this.updateLeaderboard();
-                this.updateHighScore();
-            }
-        });
-
         // 音效开关按钮
         const soundBtn = document.getElementById('toggle-sound-btn');
         soundBtn.addEventListener('click', () => {
