@@ -1,0 +1,100 @@
+========================================
+GitHub 部署 - 准备就绪！
+========================================
+
+✅ Git仓库已配置完成
+✅ 用户名：hanxhan000
+✅ 仓库名：snake-game
+✅ 所有文件已提交
+
+========================================
+下一步操作（重要！）
+========================================
+
+步骤1：在GitHub创建仓库
+------------------------
+1. 打开浏览器访问：https://github.com/new
+
+2. 填写仓库信息：
+   - Repository name: snake-game
+   - Description: HTML5 Snake Game with Leaderboard and Sound Effects
+   - 选择: Public（公开仓库）
+   - ⚠️ 不要勾选 "Add a README file"
+   - ⚠️ 不要勾选 "Add .gitignore"
+   - ⚠️ 不要选择 "Choose a license"
+
+3. 点击 "Create repository" 按钮
+
+步骤2：推送代码到GitHub
+------------------------
+仓库创建后，运行以下命令：
+
+   git push -u origin main
+
+或者双击运行：推送到GitHub.bat
+
+步骤3：启用GitHub Pages
+------------------------
+1. 推送成功后，访问你的仓库：
+   https://github.com/hanxhan000/snake-game
+
+2. 点击仓库顶部的 "Settings"（设置）
+
+3. 在左侧菜单中找到 "Pages"
+
+4. 在 "Source" 下：
+   - Branch: 选择 "main"
+   - Folder: 保持 "/ (root)"
+
+5. 点击 "Save" 按钮
+
+6. 等待1-3分钟，你的游戏将在以下地址可访问：
+   https://hanxhan000.github.io/snake-game/
+
+========================================
+认证方式
+========================================
+
+推送时需要GitHub认证，有两种方式：
+
+方式1：使用Personal Access Token（推荐）
+-----------------------------------------
+1. 访问：https://github.com/settings/tokens
+2. 点击 "Generate new token" → "Generate new token (classic)"
+3. Note: Snake Game Deploy
+4. Expiration: 选择90天
+5. 勾选权限：repo（所有选项）
+6. 点击 "Generate token"
+7. 复制Token（只显示一次！）
+8. 推送时用Token代替密码
+
+方式2：使用GitHub Desktop
+-------------------------
+如果觉得命令行麻烦，可以使用GitHub Desktop：
+1. 下载：https://desktop.github.com/
+2. 登录GitHub账号
+3. 发布仓库即可
+
+========================================
+快速推送
+========================================
+
+如果你已经准备好，可以：
+
+1. 先在GitHub创建仓库（按步骤1操作）
+
+2. 然后在命令行运行：
+   cd d:\app\Qoder-snake
+   git push -u origin main
+
+3. 或者双击运行：推送到GitHub.bat
+
+========================================
+需要帮助？
+========================================
+
+详细教程请查看：
+- GitHub部署指南.md
+- 快速部署.md
+
+========================================
