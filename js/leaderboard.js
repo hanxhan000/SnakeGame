@@ -8,16 +8,11 @@ class Leaderboard {
         this.load();
     }
 
-    // 从在线数据库加载数据
+    // 从在线数据库加载数据（优先云端）
     async load() {
         try {
-            // 先尝试从本地缓存加载
-            const cachedData = localStorage.getItem('snakeGameLeaderboard');
-            if (cachedData) {
-                this.scores = JSON.parse(cachedData);
-            }
-
-            // 然后从在线加载
+            console.log('正在从云端加载排行榜数据...');
+            // 优先从云端加载最新数据
             const response = await fetch(this.apiUrl + '/latest', {
                 headers: {
                     'X-Master-Key': this.apiKey
@@ -28,22 +23,33 @@ class Leaderboard {
                 const data = await response.json();
                 if (data.record && data.record.scores) {
                     this.scores = data.record.scores;
-                    // 更新本地缓存
+                    // 更新本地缓存（仅作备份）
                     localStorage.setItem('snakeGameLeaderboard', JSON.stringify(this.scores));
+                    console.log('✓ 云端数据加载成功，共' + this.scores.length + '条记录');
+                    return;
                 }
             }
+            
+            // 如果云端加载失败，才使用本地缓存
+            throw new Error('云端数据加载失败');
         } catch (e) {
-            console.log('使用本地缓存数据');
+            console.warn('云端加载失败，尝试使用本地缓存:', e.message);
+            const cachedData = localStorage.getItem('snakeGameLeaderboard');
+            if (cachedData) {
+                this.scores = JSON.parse(cachedData);
+                console.log('使用本地缓存数据，共' + this.scores.length + '条记录');
+            } else {
+                this.scores = [];
+                console.log('无可用数据，初始化空排行榜');
+            }
         }
     }
 
-    // 保存到在线数据库
+    // 保存到在线数据库（优先云端同步）
     async save() {
         try {
-            // 保存到本地
-            localStorage.setItem('snakeGameLeaderboard', JSON.stringify(this.scores));
-
-            // 保存到在线
+            console.log('正在保存到云端...');
+            // 先保存到云端
             const response = await fetch(this.apiUrl, {
                 method: 'PUT',
                 headers: {
@@ -56,12 +62,18 @@ class Leaderboard {
             });
             
             if (response.ok) {
-                console.log('排行榜保存成功！');
+                console.log('✓ 云端保存成功！');
+                // 云端保存成功后，更新本地缓存
+                localStorage.setItem('snakeGameLeaderboard', JSON.stringify(this.scores));
                 return true;
+            } else {
+                throw new Error('云端保存失败: ' + response.status);
             }
         } catch (e) {
-            console.error('保存排行榜失败:', e);
-            // 即使在线保存失败，本地也已保存
+            console.error('云端保存失败:', e);
+            // 云端保存失败，仍然保存到本地缓存
+            localStorage.setItem('snakeGameLeaderboard', JSON.stringify(this.scores));
+            console.log('已保存到本地缓存（离线模式）');
             return false;
         }
     }
@@ -77,11 +89,14 @@ class Leaderboard {
         localStorage.setItem('snakeGameLastPlayer', name);
     }
 
-    // 添加分数
+    // 添加分数（先加载最新云端数据再添加）
     async addScore(name, score) {
         if (!name || name.trim() === '') {
             name = '匿名玩家';
         }
+
+        // 添加前先从云端刷新最新数据，确保不会覆盖其他设备的数据
+        await this.load();
 
         const newScore = {
             name: name.trim(),
@@ -100,8 +115,16 @@ class Leaderboard {
         // 保存用户名
         this.savePlayerName(name.trim());
         
-        // 保存到本地和在线
-        await this.save();
+        // 保存到云端和本地
+        const success = await this.save();
+        
+        if (success) {
+            console.log('✓ 成绩已同步到云端，所有设备可见');
+        } else {
+            console.warn('⚠ 成绩已保存到本地，请检查网络连接');
+        }
+        
+        return success;
     }
 
     // 获取所有分数
@@ -131,8 +154,11 @@ class Leaderboard {
         this.save();
     }
 
-    // 显示排行榜
-    display(containerId) {
+    // 显示排行榜（先刷新云端数据）
+    async display(containerId) {
+        // 每次显示前刷新云端数据
+        await this.load();
+        
         const container = document.getElementById(containerId);
         
         if (!container) {

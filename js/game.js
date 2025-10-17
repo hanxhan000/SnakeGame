@@ -31,25 +31,22 @@ class Game {
         this.highScoreElement = document.getElementById('high-score');
         this.finalScoreElement = document.getElementById('final-score');
         
-        // 初始化
-        this.init();
-    }
-
-    // 初始化游戏
-    init() {
-        // 绑定事件
+        // 绑定事件（在构造函数中绑定）
         this.bindEvents();
-        
-        // 显示排行榜
-        this.updateLeaderboard();
-        
-        // 更新最高分显示
-        this.updateHighScore();
         
         // 绘制初始画面
         this.drawGrid();
         this.snake.draw(this.ctx);
         this.food.draw(this.ctx);
+    }
+
+    // 初始化游戏（异步加载排行榜）
+    async init() {
+        // 显示排行榜（等待云端数据加载）
+        await this.updateLeaderboard();
+        
+        // 更新最高分显示
+        this.updateHighScore();
     }
 
     // 绑定事件
@@ -356,12 +353,16 @@ class Game {
         saveBtn.textContent = '保存中...';
         saveBtn.disabled = true;
         
-        await this.leaderboard.addScore(name, this.score);
-        this.updateLeaderboard();
+        const success = await this.leaderboard.addScore(name, this.score);
+        await this.updateLeaderboard();
         this.updateHighScore();
         
         // 提示保存成功
-        saveBtn.textContent = '✓ 已保存';
+        if (success) {
+            saveBtn.textContent = '✓ 已同步到云端';
+        } else {
+            saveBtn.textContent = '✓ 已保存本地';
+        }
         
         setTimeout(() => {
             saveBtn.textContent = originalText;
@@ -370,8 +371,8 @@ class Game {
     }
 
     // 更新排行榜显示
-    updateLeaderboard() {
-        this.leaderboard.display('leaderboard-list');
+    async updateLeaderboard() {
+        await this.leaderboard.display('leaderboard-list');
     }
 
     // 重新开始游戏
@@ -401,6 +402,7 @@ class Game {
 }
 
 // 当页面加载完成后，初始化游戏
-window.addEventListener('DOMContentLoaded', () => {
-    new Game();
+window.addEventListener('DOMContentLoaded', async () => {
+    const game = new Game();
+    await game.init();
 });
